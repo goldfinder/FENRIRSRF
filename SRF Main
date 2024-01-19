@@ -1,0 +1,31 @@
+local crews = require(script["Crews"])
+local plrsetupbase = game:GetService("ServerStorage").PLRDEF
+local plrdataset = game:GetService("ServerStorage").PLRDATASTORAGE
+function FE(plr)
+	local file
+	if plrsetupbase:FindFirstChild(plr.UserId)then
+		file=plrsetupbase:FindFirstChild(plr.UserId)
+	else
+		file=plrsetupbase:Clone()
+		file.Name=plr.UserId
+		file.Parent=plrdataset
+	end
+	local ranktxt=plr:GetRoleInGroup(33721938)
+	local rankid=plr:GetRankInGroup(33721938)
+	if ranktxt=="Guest"then
+		ranktxt="Visitor"
+	end
+	file:SetAttribute("Rank",ranktxt)
+	file:SetAttribute("ID",rankid)
+	if string.find(ranktxt,"Commander")then
+		file:SetAttribute("FSRFCOMMANDER",true)
+	elseif string.find(ranktxt,"Command")then
+		file:SetAttribute("FSRFCOMMAND",true)
+	end
+	if rankid>=17 then
+		file:SetAttribute("UniformFreedom",true)
+	end
+end
+game.Players.PlayerAdded:Connect(function(plr)
+	FE(plr)
+end)
